@@ -1,51 +1,14 @@
-# Simple bFLT loader for Ndless
+# Ndless bFLT loader toolchain
 
-Loads bFLT binaries into memory for Ndless.
+A toolchain that integrates with Ndless that allows compiling executables for running on Ndless bFLT loader (https://github.com/tangrs/ndless-bflt-loader).
 
 ## Status
 
-* Can run binaries
-* Basic unit tests pass
-* No support for gzipped data yet
-* Relocations all tested and working correctly
-* Shared library support is basically stable (albeit with nasty workarounds)
-* Has an SDK!
+* Shared library support working with workarounds (TODO: fix)
+* Data section relocations are working
+* Text section relocations are not working
 
-## API
-
-There's only three functions being exposed:
-
-```int bflt_load(char* filename, void **mem_ptr, size_t* mem_size, int (**entry_address_ptr)(int,char*[]));```
-
-Loads a given filename into memory and correctly relocates it.
-
-The pointer to the final, ready to run binary image will be stored in the pointer pointed to by```mem_ptr```. Will contain NULL on failure.
-
-The size of the image is stored in ```mem_size``` or 0 on failure.
-
-The entrypoint function address will be stored in the pointer pointed to by ```entry_address_ptr```. Will also contain NULL on failure.
-
-The functions returns 0 on success or -1 on failure.
-
-```int bflt_fload(FILE* fp, void **mem_ptr, size_t* mem_size, int (**entry_address_ptr)(int,char*[]));```
-
-Same as above except takes a file pointer as its argument. The file pointer is NOT freed on return.
-
-```void bflt_free(void* ptr);```
-
-Frees memory when finished. Give it the address stored in ```mem_ptr``` - NOT the address in ```entry_point_ptr```.
-
-```void bflt_free_cached();```
-
-Free all cached libraries.
-
-## Loading binaries
-
-See ```load.c``` for more information.
-
-Basically, load the binary into memory and call the entrypoint function pointer with the apropriate values. Then free it when the program finishes executing.
-
-## Getting a elf2flt toolchain
+## Toolchain setup
 
 Firstly you need binutils compiled for ARM. Get your binutils from your favourite location.
 
